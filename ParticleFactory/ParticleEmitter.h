@@ -1,7 +1,7 @@
 #pragma once
 #include "particles.h"
 
-#define PART_SIZE 120
+#define PART_SIZE 150
 
 class ParticleEmitter
 {
