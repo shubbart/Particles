@@ -70,4 +70,27 @@ public:
 
 		return retval;
 	}
+
+	ObjectPool<Entity>::iterator spawnMouseAttractor(unsigned sprite_id)
+	{
+		ObjectPool<Entity>::iterator retval = entities.push();
+		if (!retval )return retval;
+		retval->factory = this;
+
+		retval->trans = transforms.push();
+		retval->sprt = sprites.push();
+		retval->ctrl = controllers.push();
+		retval->rgbd = rigidbodies.push();
+
+		retval->trans->pos = vec2{ rand01()*800,rand01()*600 };
+		retval->trans->scale = vec2{ 32,32 };
+
+		retval->sprt->sprite_id = sprite_id;
+		retval->sprt->tint.ui_color = 0xffffff88;
+
+		retval->ctrl->speed = rand01() * 100 + 20;
+
+		return retval;
+
+	}
 };

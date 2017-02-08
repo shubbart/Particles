@@ -1,44 +1,25 @@
-//#include "sfwdraw.h"
-//#include "maths.h"
-//#include "particles.h"
-//#include "ParticleEmitter.h"
-//#include "ObjectPool.h"
+#include "sfwdraw.h"
+#include "maths.h"
+#include "particles.h"
+#include "ParticleEmitter.h"
+#include "ObjectPool.h"
 #include "factory.h"
+#include "GameState.h"
 
 void main()
 {
 	sfw::initContext();
-	Factory factory;
-	unsigned sprite = sfw::loadTextureMap("../res/particle_sprite.png");
-	
+
+	GameState gs;
+	gs.init();
+	gs.play();
 
 	while (sfw::stepContext())
 	{
 		float dt = sfw::getDeltaTime();
-		factory.spawnStaticImage(sprite, rand() % 800, rand() % 600, rand() % 40 + 40, rand() % 40 + 40, 3.f);
 
-		for (auto e = factory.begin(); e != factory.end();)
-		{
-			if (e->sprt)
-			{
-				e->sprt->draw(*e->trans);
-			}
-
-			if (e->life)
-			{
-				if (!(e->life->isAlive()))
-				{
-					factory.destroy(e);
-					continue;
-				}
-				e->life->age(dt);
-			}
-
-			++e;
-		}
+		gs.update(dt);
 	}
-
-	sfw::termContext;
 }
 
 /*void main()

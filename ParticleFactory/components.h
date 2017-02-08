@@ -11,7 +11,7 @@ struct transform
 
 struct rigidbody
 {
-	vec2 velocity, acceleration;
+	vec2 velocity = { 0,0 }, acceleration = { 0,0 };
 	void integrate(transform &T, float dt)
 	{
 		velocity = velocity + acceleration * dt;
@@ -47,7 +47,7 @@ struct controller
 	{
 		vec2 mouse = vec2{ sfw::getMouseX(), sfw::getMouseY() };
 
-		RB.acceleration = normal(T.pos - mouse) * speed;
+		RB.acceleration = normal(mouse - T.pos) * speed;
 	}
 };
 

@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="factory.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="maths.h" />
     <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="ParticleEmitter.h" />
