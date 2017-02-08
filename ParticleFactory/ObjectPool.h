@@ -118,4 +118,7 @@ public:
 		}
 		return it;
 	}
+
+	iterator begin() { return iterator(this, fillHead); }
+	iterator end() { return iterator(this, m_size); }
 };
