@@ -1,4 +1,5 @@
 #pragma once
+
 #include "maths.h"
 #include "sfwdraw.h"
 
@@ -10,19 +11,20 @@ struct transform
 
 struct rigidbody
 {
-	vec2 vel, acc;
+	vec2 velocity, acceleration;
 	void integrate(transform &T, float dt)
 	{
-		vel = vel + acc * dt;
-		T.pos = T.pos + vel * dt;
+		velocity = velocity + acceleration * dt;
+		T.pos = T.pos + velocity * dt;
 	}
 };
 
 struct lifetime
 {
 	float time = 0, lifespan;
-	void age(float dt) { time = +dt; }
-	bool isAlive() const { time < lifespan; }
+
+	void age(float dt) { time += dt; }
+	bool isAlive() const { return time < lifespan; }
 	float pctAlive() const { return time / lifespan; }
 };
 
@@ -30,26 +32,30 @@ struct sprite
 {
 	size_t sprite_id;
 	color tint = { WHITE };
+
 	void draw(const transform &T)
 	{
-		sfw::drawTexture(sprite_id, T.pos.x, T.pos.y, T.scale.x, T.scale.y, T.angle, true, 0, tint.ui_color);
+		sfw::drawTexture(sprite_id, T.pos.x, T.pos.y,
+			T.scale.x, T.scale.y, T.angle, true, 0, tint.ui_color);
 	}
 };
 
 struct controller
 {
 	float speed;
-	void poll(transform &T, rigidbody &rb)
+	void poll(transform &T, rigidbody &RB)
 	{
 		vec2 mouse = vec2{ sfw::getMouseX(), sfw::getMouseY() };
-		rb.acc = normal(T.pos - mouse) * speed;
+
+		RB.acceleration = normal(T.pos - mouse) * speed;
 	}
 };
 
-struct particle
+struct particles
 {
 	vec2 sDim, eDim;
 	color sColor, eColor;
+
 	void update(const lifetime &life, transform &trans, sprite &sprt)
 	{
 		trans.scale = lerp(sDim, eDim, life.pctAlive());

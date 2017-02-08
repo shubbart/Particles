@@ -2,17 +2,17 @@
 #include "components.h"
 #include "ObjectPool.h"
 
-template<typename T>
-using handle = ObjectPool<T>::iterator;
+//template<typename T>
+//using handle = ObjectPool<T>::iterator;
 struct Entity
 {
 	class Factory *factory;
-	handle<transform> trans;
-	handle<rigidbody> rgbd;
-	handle<lifetime> life;
-	handle<sprite> sprt;
-	handle<controller> ctrl;
-	handle<particle> part;
+	ObjectPool<transform>::iterator trans;
+	ObjectPool<rigidbody>::iterator rgbd;
+	ObjectPool<lifetime>::iterator life;
+	ObjectPool<sprite>::iterator sprt;
+	ObjectPool<controller>::iterator ctrl;
+	ObjectPool<particles>::iterator part;
 
 	void onFree()
 	{
@@ -29,36 +29,45 @@ class Factory
 {
 	ObjectPool<Entity> entities;
 	ObjectPool<transform> transforms;
-	ObjectPool<rigidbody> rigibodies;
+	ObjectPool<rigidbody> rigidbodies;
 	ObjectPool<lifetime> lifetimes;
 	ObjectPool<sprite> sprites;
 	ObjectPool<controller> controllers;
-	ObjectPool<particle> particles;
+	ObjectPool<particles> particles;
 
 public:
 
-	Factory() : entities(512), transforms(512), rigibodies(512), lifetimes(512), sprites(512), controllers(512), particles(512) {}
+	Factory() : entities(512), transforms(512), rigidbodies(512), controllers(512),
+		sprites(512), lifetimes(512), particles(512)
+	{ }
 
-	handle<Entity> destroy(handle<Entity> &eit) { eit->onFree(); return eit.free(); }
-	handle<Entity> begin() { return entities.begin(); }
-	handle<Entity> end() { return entities.end(); }
+	ObjectPool<Entity>::iterator begin() { return entities.begin(); }
+	ObjectPool<Entity>::iterator end() { return entities.end(); }
 
-	handle<Entity> spawnStaticImage(unsigned sprite_id, float x, float y, float w, float h, float time = -1)
+
+	ObjectPool<Entity>::iterator destroy(ObjectPool<Entity>::iterator &eit) { eit->onFree(); return eit.free(); }
+
+	// transform, sprite, O:lifetime
+	ObjectPool<Entity>::iterator spawnStaticImage(unsigned sprite_id, float x, float y, float w, float h, float time = -1)
 	{
-		handle<Entity> retval = entities.push();
+		ObjectPool<Entity>::iterator retval = entities.push();
+		if (!retval) return retval;
+
+		retval->factory = this;
+
 		retval->trans = transforms.push();
 		retval->sprt = sprites.push();
 
-		retval->trans->pos = vec2{ x,y };
-		retval->trans->scale = vec2{ w,h };
+		retval->trans->pos = vec2{ x, y };
+		retval->trans->scale = vec2{ w, h };
 		retval->sprt->sprite_id = sprite_id;
 
 		if (time > 0)
 		{
 			retval->life = lifetimes.push();
-			retval->life->time = time;
+			retval->life->lifespan = time;
 		}
+
 		return retval;
 	}
-
 };
