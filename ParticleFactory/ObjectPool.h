@@ -23,6 +23,13 @@ class ObjectPool
 
 	size_t openHead, fillHead;
 public:
+
+	ObjectPool(const ObjectPool &) = delete;
+	ObjectPool &operator=(const ObjectPool &) = delete;
+	ObjectPool( ObjectPool &&) = delete;
+	ObjectPool &operator=( ObjectPool &&) = delete;
+	
+	~ObjectPool() { delete[] m_data; }
 	ObjectPool(size_t a_size) : m_size(a_size), openHead(0), fillHead(m_size)
 	{
 		m_data = new _intern[m_size];
@@ -48,9 +55,11 @@ public:
 
 		particle &operator* () { return  m_ref->m_data[m_idx].data; } // *this (Dereference operator)
 		particle *operator->() { return &m_ref->m_data[m_idx].data; } // this->(Indirection operator)
+		particle *operator&()  { return &m_ref->m_data[m_idx].data; } // &this reference-of operator
 
 		const particle &operator* () const { return  m_ref->m_data[m_idx].data; } // (constant dereference)
 		const particle *operator->() const { return &m_ref->m_data[m_idx].data; } // (constant indirection)
+		const particle *operator&() const { return &m_ref->m_data[m_idx].data; }  // &this reference-of operator
 
 		iterator &operator++() { m_idx = m_ref->m_data[m_idx].next; return *this; } // (prefix increment)
 		iterator operator++(int) { auto that = *this;  operator++();  return  that; } // (postfix increment)
@@ -59,6 +68,11 @@ public:
 		bool operator!=(const iterator &O) const { return !operator==(O); }
 
 		operator bool() const { m_ref != nullptr && m_idx < m_ref->m_size && !m_ref->m_data[m_idx].open; }
+
+		operator particle*() { return operator&(); }
+		operator const particle*() const { return operator&(); }
+
+		iterator &free() {return *this = m_ref->pop(*this); }
 	};
 
 	iterator push(const particle &val)
