@@ -43,4 +43,22 @@ public:
 	handle<Entity> begin() { return entities.begin(); }
 	handle<Entity> end() { return entities.end(); }
 
+	handle<Entity> spawnStaticImage(unsigned sprite_id, float x, float y, float w, float h, float time = -1)
+	{
+		handle<Entity> retval = entities.push();
+		retval->trans = transforms.push();
+		retval->sprt = sprites.push();
+
+		retval->trans->pos = vec2{ x,y };
+		retval->trans->scale = vec2{ w,h };
+		retval->sprt->sprite_id = sprite_id;
+
+		if (time > 0)
+		{
+			retval->life = lifetimes.push();
+			retval->life->time = time;
+		}
+		return retval;
+	}
+
 };

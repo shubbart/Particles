@@ -76,7 +76,7 @@ public:
 		iterator &free() {return *this = m_ref->pop(*this); }
 	};
 
-	iterator push(const T &val)
+	iterator push(const T &val = T())
 	{
 		if (openHead >= m_size) return iterator();
 		size_t idx = openHead;
