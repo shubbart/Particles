@@ -87,9 +87,35 @@ public:
 		return iterator(this, idx);
 	}
 
-	iterator pop(const iterator &it)
+	iterator pop(iterator it)
 	{
+		if (!(it && it.m_ref == this)) return iterator();
 
+		size_t idx = it.m_idx;
+		++it;
+		m_data[idx].open = true;
+
+		if (idx == fillHead)
+			fillHead = m_data[idx].next;
+		else
+		{
+			size_t left = idx;
+			while (m_data[--left].open);
+			m_data[left].next = m_data[idx].next;
+		}
+
+		if (idx < openHead)
+		{
+			m_data[idx].next = openHead;
+			openHead = idx;
+		}
+		else
+		{
+			size_t left = idx;
+			while (!m_data[--left].open);
+			m_data[idx].next = m_data[left].next;
+			m_data[left].next = idx;
+		}
+		return it;
 	}
-
 };
