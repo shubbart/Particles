@@ -2,6 +2,7 @@
 #include <vector>
 #include "particles.h"
 
+template<typename T>
 class ObjectPool
 {
 	// Interleaved type, Array of Structures
@@ -9,7 +10,7 @@ class ObjectPool
 	{
 		bool open;
 		size_t next;
-		particle data;
+		T data;
 
 	};
 	_intern *m_data;
@@ -53,13 +54,13 @@ public:
 	public:
 		iterator() : m_ref(nullptr), m_idx(0) { }
 
-		particle &operator* () { return  m_ref->m_data[m_idx].data; } // *this (Dereference operator)
-		particle *operator->() { return &m_ref->m_data[m_idx].data; } // this->(Indirection operator)
-		particle *operator&()  { return &m_ref->m_data[m_idx].data; } // &this reference-of operator
+		T &operator* () { return  m_ref->m_data[m_idx].data; } // *this (Dereference operator)
+		T *operator->() { return &m_ref->m_data[m_idx].data; } // this->(Indirection operator)
+		T *operator&()  { return &m_ref->m_data[m_idx].data; } // &this reference-of operator
 
-		const particle &operator* () const { return  m_ref->m_data[m_idx].data; } // (constant dereference)
-		const particle *operator->() const { return &m_ref->m_data[m_idx].data; } // (constant indirection)
-		const particle *operator&() const { return &m_ref->m_data[m_idx].data; }  // &this reference-of operator
+		const T &operator* () const { return  m_ref->m_data[m_idx].data; } // (constant dereference)
+		const T *operator->() const { return &m_ref->m_data[m_idx].data; } // (constant indirection)
+		const T *operator&() const { return &m_ref->m_data[m_idx].data; }  // &this reference-of operator
 
 		iterator &operator++() { m_idx = m_ref->m_data[m_idx].next; return *this; } // (prefix increment)
 		iterator operator++(int) { auto that = *this;  operator++();  return  that; } // (postfix increment)
@@ -75,7 +76,7 @@ public:
 		iterator &free() {return *this = m_ref->pop(*this); }
 	};
 
-	iterator push(const particle &val)
+	iterator push(const T &val)
 	{
 		if (openHead >= m_size) return iterator();
 		size_t idx = openHead;

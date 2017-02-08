@@ -11,12 +11,12 @@ void main()
 	unsigned sprite = sfw::loadTextureMap("../res/particle_sprite.png");
 
 	ParticleEmitter pe;
-	pe.emitRateLow = 0.1f;
-	pe.emitRateHigh = 0.3f;
+	pe.emitRateLow = 0.01f;
+	pe.emitRateHigh = 0.03f;
 
 	pe.sprite = sprite;
 
-	pe.pos = vec2{ 400,1000 };
+	pe.pos = vec2{ 400,1020 };
 	pe.angleLow = 270;
 	pe.angleHigh = 270;
 	pe.speedLow = 100;
@@ -31,12 +31,12 @@ void main()
 	pe.colorLowEnd.ui_color = CYAN;
 	pe.colorHighEnd.ui_color = BLUE;
 
-	pe.lifespanLow = .3f;
-	pe.lifespanHigh = 1.3f;
+	pe.lifespanLow = .6f;
+	pe.lifespanHigh = 1.7f;
 
 	ParticleEmitter pe2;
-	pe2.emitRateLow = 0.1f;
-	pe2.emitRateHigh = 0.3f;
+	pe2.emitRateLow = 0.01f;
+	pe2.emitRateHigh = 0.03f;
 
 	pe2.sprite = sprite;
 

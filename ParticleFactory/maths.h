@@ -17,6 +17,17 @@ inline vec2 operator+(const vec2 &a, const vec2 &b)
 	return vec2{ a.x + b.x, a.y + b.y };
 }
 
+inline vec2 operator-(const vec2 &a, const vec2 &b)
+{
+	return vec2{ a.x - b.x, a.y - b.y };
+}
+
+inline vec2 normal(const vec2 &A)
+{
+	float D = sqrt(A.x*A.x + A.y*A.y);
+	return vec2{ A.x / D, A.y / D };
+}
+
 inline vec2 operator*(const vec2 &a, float b)
 {
 	return vec2{ a.x * b, a.y * b };

@@ -1,20 +1,22 @@
 #pragma once
 #include "particles.h"
+#include "ObjectPool.h"
 
-#define PART_SIZE 150
+#define PART_SIZE 100000
 
 class ParticleEmitter
 {
-	particle particles[PART_SIZE];
+	//particle particles[PART_SIZE];
+	ObjectPool<particle> particles;
 	void emit()
 	{
-		particle part;
-		for (int i = 0; i < PART_SIZE; ++i)
+		/*for (int i = 0; i < PART_SIZE; ++i)
 			if (!particles[i].isActive())
 			{
 				particles[i] = _generate();
 				return;
-			}
+			}*/
+		particles.push(_generate());
 	}
 	particle _generate()
 	{
@@ -34,7 +36,7 @@ class ParticleEmitter
 public:
 	float emitRateLow, emitRateHigh;
 
-	ParticleEmitter() : emissionTimer(0) {}
+	ParticleEmitter() : emissionTimer(0), particles(PART_SIZE) {}
 
 	unsigned sprite;
 	vec2 pos;
@@ -46,22 +48,24 @@ public:
 
 	void update(float dt)
 	{
-		for (int i = 0; i < PART_SIZE; ++i)
+		/*for (int i = 0; i < PART_SIZE; ++i)
 		{
 			if(particles[i].isActive())
 			{
 				particles[i].refresh(dt);
-			}
-			emissionTimer -= dt;
-			if (emissionTimer < 0)
-			{
-				do
-				{
-					emit();
-				}
-				
-				while((emissionTimer += lerp(emitRateLow, emitRateHigh, rand01())) < 0);
-			}
+			}*/
+		for (auto it = particles.begin(); it != particles.end();)
+		{
+			it->refresh(dt);
+			if (it->isActive()) ++it;
+			else it.free();
+		}
+
+		emissionTimer -= dt;
+		while (emissionTimer < 0)
+		{
+			emit();
+			emissionTimer += lerp(emitRateLow, emitRateHigh, rand01());
 		}
 	}
 };
