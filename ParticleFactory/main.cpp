@@ -2,6 +2,7 @@
 #include "maths.h"
 #include "particles.h"
 #include "ParticleEmitter.h"
+#include "ObjectPool.h"
 
 void main()
 {
@@ -19,19 +20,19 @@ void main()
 	pe.angleLow = 270;
 	pe.angleHigh = 270;
 	pe.speedLow = 100;
-	pe.speedHigh = 1300;
+	pe.speedHigh = 900;
 	pe.dimLowStart = vec2{ 8,8 };
 	pe.dimHighStart = vec2{ 32,32 };
 	pe.dimLowEnd = vec2{ 256,256 };
 	pe.dimHighEnd = vec2{ 512,512 };
 
-	pe.colorLowStart.ui_color = WHITE;
+	pe.colorLowStart.ui_color = NONE;
 	pe.colorHighStart.ui_color = CYAN;
 	pe.colorLowEnd.ui_color = CYAN;
 	pe.colorHighEnd.ui_color = BLUE;
 
 	pe.lifespanLow = .3f;
-	pe.lifespanHigh = .7f;
+	pe.lifespanHigh = 1.3f;
 
 	ParticleEmitter pe2;
 	pe2.emitRateLow = 0.1f;
